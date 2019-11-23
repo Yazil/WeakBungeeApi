@@ -13,11 +13,20 @@ public class RespWeb {
 				get("/playercount", (request, response) -> {
 					return GameResp.getPlayerCount();
 				});
+				get("/playerlist", (request, response) -> {
+					return GameResp.getFormatedGlobalPlayerList();
+				});
 			});
 			path("/server/:server", () -> {
 				get("/playercount", (request, reponse) -> {
 					if(GameResp.serverExist(request.params(":server"))) {
 						return GameResp.getServerPlayerCount(request.params(":server"));
+					}
+					return "Server doesn't exist : " + request.params(":server");
+				});
+				get("/playerlist", (request, reponse) -> {
+					if(GameResp.serverExist(request.params(":server"))) {
+						return GameResp.getFormatedServerPlayerList(request.params(":server"));
 					}
 					return "Server doesn't exist : " + request.params(":server");
 				});

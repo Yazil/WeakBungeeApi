@@ -50,6 +50,62 @@ public class WeakBungeeApi extends JavaPlugin{
 		return 0;
 	}
 	
+	public String[] getGlobalPlayerList() {
+		
+		
+		HttpGet http = new HttpGet("http://localhost:"+ port + "/api/" + key + "/global/playerlist");
+		
+		try {
+			CloseableHttpResponse response = httpClient.execute(http);
+			
+			HttpEntity entity = response.getEntity();
+			
+			if (entity != null) {
+                // return it as a String
+                String result = EntityUtils.toString(entity);
+        
+                String[] players = result.split(",");
+                
+                return players;
+            }
+		} catch (IOException e) {
+			System.out.println("Failed to contact api");
+			e.printStackTrace();
+		}
+		
+		
+		
+		return null;
+	}
+	
+	public String[] getServerPlayerList(String serverName) {
+		
+		
+		HttpGet http = new HttpGet("http://localhost:"+ port + "/api/" + key + "/server/" + serverName +"/playerlist");
+		
+		try {
+			CloseableHttpResponse response = httpClient.execute(http);
+			
+			HttpEntity entity = response.getEntity();
+			
+			if (entity != null) {
+                // return it as a String
+                String result = EntityUtils.toString(entity);
+        
+                String[] players = result.split(",");
+                
+                return players;
+            }
+		} catch (IOException e) {
+			System.out.println("Failed to contact api");
+			e.printStackTrace();
+		}
+		
+		
+		
+		return null;
+	}
+	
 	public int getServerPlayerCount(String server) {
 		
 		
@@ -91,9 +147,7 @@ public class WeakBungeeApi extends JavaPlugin{
 		
 		port = this.getConfig().getInt("port");
 		key = this.getConfig().getString("key");
-		
-		System.out.println(getTotalPlayerCount());
-		
+				
 		super.onEnable();
 	}
 	
