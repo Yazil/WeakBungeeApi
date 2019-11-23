@@ -1,0 +1,4 @@
+name: WeakBungeeApi
+main: fr.yazil.weakbungeeapi.bungee.WeakApi
+version: 1.0
+author: Yazil
