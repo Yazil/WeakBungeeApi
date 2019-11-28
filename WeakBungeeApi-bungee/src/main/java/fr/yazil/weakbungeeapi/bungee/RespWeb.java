@@ -24,6 +24,12 @@ public class RespWeb {
 					}
 					return "Server doesn't exist : " + request.params(":server");
 				});
+				get("/status", (request, reponse) -> {
+					if(GameResp.serverExist(request.params(":server"))) {
+						return GameResp.serverExist(request.params(":server"));
+					}
+					return "Server doesn't exist : " + request.params(":server");
+				});
 				get("/playerlist", (request, reponse) -> {
 					if(GameResp.serverExist(request.params(":server"))) {
 						return GameResp.getFormatedServerPlayerList(request.params(":server"));
