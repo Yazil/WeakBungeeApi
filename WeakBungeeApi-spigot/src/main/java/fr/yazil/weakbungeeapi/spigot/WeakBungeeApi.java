@@ -153,6 +153,29 @@ public class WeakBungeeApi extends JavaPlugin {
 
 		return false;
 	}
+	
+	public String getServerMotd(String server) {
+
+		HttpGet http = new HttpGet("http://localhost:" + port + "/api/" + key + "/server/" + server + "/motd");
+
+		try {
+			CloseableHttpResponse response = httpClient.execute(http);
+
+			HttpEntity entity = response.getEntity();
+
+			if (entity != null) {
+				// return it as a String
+				String result = EntityUtils.toString(entity);
+				
+				return result;
+			}
+		} catch (IOException e) {
+			System.out.println("Failed to contact api");
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 	@Override
 	public void onEnable() {

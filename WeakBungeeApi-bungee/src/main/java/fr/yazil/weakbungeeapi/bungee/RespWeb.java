@@ -36,6 +36,12 @@ public class RespWeb {
 					}
 					return "Server doesn't exist : " + request.params(":server");
 				});
+				get("/motd", (request, reponse) -> {
+					if(GameResp.serverExist(request.params(":server"))) {
+						return GameResp.getServerMotd(request.params(":server"));
+					}
+					return "Server doesn't exist : " + request.params(":server");
+				});
 			});
 		});
 	}

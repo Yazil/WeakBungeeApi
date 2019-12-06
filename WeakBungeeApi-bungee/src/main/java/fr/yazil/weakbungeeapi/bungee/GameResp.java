@@ -31,6 +31,15 @@ public class GameResp {
 		return sb.toString();
 	}
 	
+	public static String getServerMotd(String server) {
+		String re = null;
+		if(serverExist(server)) {
+			re = p.getServerInfo(server).getMotd();
+		}
+		
+		return re;
+	}
+	
 	public static String getFormatedServerPlayerList(String serverName) {
 		StringBuilder sb = new StringBuilder();
 		for(ProxiedPlayer player : p.getServerInfo(serverName).getPlayers()) {
