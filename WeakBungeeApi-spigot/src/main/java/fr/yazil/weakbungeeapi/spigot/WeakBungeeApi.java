@@ -152,9 +152,9 @@ public class WeakBungeeApi extends JavaPlugin {
 		return false;
 	}
 	
-	public String getServerMotd(int port) {
+	public String getServerMotd(String host,int port) {
 		
-		PingServer p = new PingServer("localhost", port);
+		PingServer p = new PingServer(host, port);
 
 		return p.getMotd();
 	}
