@@ -1,15 +1,25 @@
 package fr.yazil.weakbungeeapi.spigot;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 
-public class WeakBungeeApi extends JavaPlugin {
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+
+public class WeakBungeeApi extends JavaPlugin implements PluginMessageListener {
 
 	private int port;
 	private String key;
@@ -125,6 +135,15 @@ public class WeakBungeeApi extends JavaPlugin {
 
 		return 0;
 	}
+	
+	public void teleportPlayerToPlayer(Player from, Player to) {
+		ByteArrayDataOutput out = ByteStreams.newDataOutput();
+		out.writeUTF("TpRequest");
+		out.writeUTF(from.getName());
+		out.writeUTF(to.getName());
+		
+		from.sendPluginMessage(this, "weakbungee:tp", out.toByteArray());
+	}
 
 	public boolean getServerStatus(String server) {
 
@@ -152,12 +171,6 @@ public class WeakBungeeApi extends JavaPlugin {
 		return false;
 	}
 	
-	public String getServerMotd(String host,int port) {
-		
-		PingServer p = new PingServer(host, port);
-
-		return p.getMotd();
-	}
 
 	@Override
 	public void onEnable() {
@@ -166,7 +179,10 @@ public class WeakBungeeApi extends JavaPlugin {
 
 		port = this.getConfig().getInt("port");
 		key = this.getConfig().getString("key");
-
+		
+		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "weakbungee:tp");
+        Bukkit.getMessenger().registerIncomingPluginChannel(this, "weakbungee:tp", this);
+		
 		super.onEnable();
 	}
 
@@ -174,6 +190,40 @@ public class WeakBungeeApi extends JavaPlugin {
 	public void onDisable() {
 
 		super.onDisable();
+	}
+
+	@Override
+	public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+
+		 if (!channel.equals("weakbungee:tp")) return;
+
+	        String action = null;
+
+	        ArrayList<String> received = new ArrayList<>();
+
+	        DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
+
+	        try {
+	            action = in.readUTF();
+
+	            while (in.available() > 0) {
+	                received.add(in.readUTF());
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	        if (action == null) return;
+
+	        if (action.equalsIgnoreCase("teleport")) {
+	            Player from = Bukkit.getServer().getPlayer(received.get(0));
+	            Player to = Bukkit.getServer().getPlayer(received.get(1));
+	            assert to != null;
+	            assert from != null;
+	            from.teleport(to);
+	        }
+		
 	}
 
 }
