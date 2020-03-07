@@ -1,6 +1,9 @@
 package fr.yazil.weakbungeeapi.bungee;
 
+import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class GameResp {
@@ -30,11 +33,21 @@ public class GameResp {
 		
 		return sb.toString();
 	}
+
+	protected static String motd;
 	
 	public static String getServerMotd(String server) {
 		String re = null;
+
 		if(serverExist(server)) {
-			re = p.getServerInfo(server).getMotd();
+			Callback<ServerPing> callback = new Callback<ServerPing>() {
+	            @Override
+	            public void done(ServerPing result, Throwable error) {
+	               motd = TextComponent.toLegacyText(result.getDescriptionComponent());
+	            }
+	        };
+
+	        ProxyServer.getInstance().getServerInfo(server).ping(callback);
 		}
 		
 		return re;

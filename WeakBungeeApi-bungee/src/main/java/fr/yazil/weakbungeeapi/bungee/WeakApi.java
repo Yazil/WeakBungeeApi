@@ -27,6 +27,7 @@ public class WeakApi extends Plugin implements Listener{
 	private String key;
 	private int port;
 	
+	
 	@Override
 	public void onEnable() {
 		
@@ -127,7 +128,7 @@ public class WeakApi extends Plugin implements Listener{
 
         @SuppressWarnings("unused")
 		ScheduledTask schedule = ProxyServer.getInstance().getScheduler()
-                .schedule(this, () -> teleportt(from, to), 1, TimeUnit.SECONDS);
+                .schedule(this, () -> teleportt(from, to), (long) 1, TimeUnit.MILLISECONDS);
     }
 
 }
