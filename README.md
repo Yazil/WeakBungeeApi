@@ -1,0 +1,3 @@
+# WeakBungeeApi
+Juste un plugin dont le but était de faciliter le transferts d'info entre un BungeeCord et un Spigot (Discontinued)
+Vraiment mal codé sérieusement il ne faut pas utiliser...
